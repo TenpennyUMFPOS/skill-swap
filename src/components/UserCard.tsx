@@ -2,16 +2,9 @@
 import { CardContent, CardFooter, Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { HeartIcon } from '@radix-ui/react-icons'
-import { SpringRef, SpringValue } from "@react-spring/web";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { SpringRef} from "@react-spring/web";
 
 
-type CardProperty = {
-    x: number;
-    y: number;
-    rot: number;
-    scale: number;
-};
 export default function UserCard({ api, gone, index }:
     {
         api: SpringRef<{ x: number, y: number, scale: number, rot: number }>,
@@ -57,14 +50,6 @@ export default function UserCard({ api, gone, index }:
                 </div>
 
             </CardContent>
-            {/* <CardFooter className="p-4 flex justify-between">
-                <Button size="lg" variant="outline">
-                    <CrossIcon className="w-6 h-6" />
-                </Button>
-                <Button size="lg">
-                    <HeartIcon className="w-6 h-6" />
-                </Button>
-            </CardFooter> */}
             <CardFooter className="w-full h-20 bg-black flex justify-between items-center">
                 <Button size="lg" variant="outline" onClick={reject}>
                     <CrossIcon className="w-6 h-6" />

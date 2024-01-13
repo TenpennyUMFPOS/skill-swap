@@ -5,7 +5,7 @@ export default function Home() {
   return (
 
     <>
-      <main className="flex justify-center items-center h-screen bg-gray-400">
+      <main className="relative flex justify-center items-center overflow-x-hidden h-screen bg-gray-400">
         <Deck />
       </main>
     </>
