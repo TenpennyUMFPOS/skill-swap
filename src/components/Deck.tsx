@@ -31,7 +31,7 @@ const trans = (r: number, s: number) =>
 
 function Deck() {
 
-    const [gone] = useState(() => new Set()) // The set flags all the cards that are flicked out
+    const [gone] = useState(() => new Set<number>()) // The set flags all the cards that are flicked out
     const [props, api] = useSprings(cards.length, i => ({
         from: from(i),
         ...to(i),
@@ -78,7 +78,7 @@ function Deck() {
                             transform: interpolate([rot, scale], trans),
                         }}
                     >
-                        <UserCard api={api} />
+                        <UserCard api={api} gone={gone} index={i}/>
                     </animated.div>
                 </animated.div>
             ))}

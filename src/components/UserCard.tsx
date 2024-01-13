@@ -12,13 +12,26 @@ type CardProperty = {
     rot: number;
     scale: number;
 };
-export default function UserCard({ api }: { api: SpringRef<{ x: number, y: number, scale: number, rot: number }> }) {
+export default function UserCard({ api, gone, index }:
+    {
+        api: SpringRef<{ x: number, y: number, scale: number, rot: number }>,
+        gone: Set<number>,
+        index: number
+    }) {
 
     const like = () => {
-        console.log("liked")
+        performAction(1);
+    }
+    const reject = () => {
+        performAction(-1)
+    }
+
+    const performAction = (dir: number) => {
         api.start(i => {
-            const x = (200 + window.innerWidth) * 1
-            const rot = (200 + window.innerWidth) * 1
+            if (index != i) return
+            gone.add(index)
+            const x = (200 + window.innerWidth) * dir
+            const rot = (200 + window.innerWidth) * dir / 15
             const scale = 1
             return {
                 x,
@@ -28,9 +41,6 @@ export default function UserCard({ api }: { api: SpringRef<{ x: number, y: numbe
                 config: { friction: 20, tension: 80 },
             }
         })
-    }
-    const reject = () => {
-
     }
     return (
         <Card className="w-full h-full mx-auto">
@@ -56,10 +66,10 @@ export default function UserCard({ api }: { api: SpringRef<{ x: number, y: numbe
                 </Button>
             </CardFooter> */}
             <CardFooter className="w-full h-20 bg-black flex justify-between items-center">
-                <Button size="lg" variant="outline" onClick={like}>
+                <Button size="lg" variant="outline" onClick={reject}>
                     <CrossIcon className="w-6 h-6" />
                 </Button>
-                <Button size="lg" onClick={reject}>
+                <Button size="lg" onClick={like}>
                     <HeartIcon className="w-6 h-6" />
                 </Button>
             </CardFooter>
