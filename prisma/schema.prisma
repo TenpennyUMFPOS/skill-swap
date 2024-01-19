@@ -10,34 +10,79 @@ datasource db {
   url      = "file:./dev.db"
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String  
-  createdAt DateTime @default(now()) 
-  content   String?
-  published Boolean  @default(false)
-  authorId  Int
-  user      User     @relation(fields: [authorId], references: [id])
-  tags      Tag[]
-}
-
-model Profile {
-  id     Int     @id @default(autoincrement())
-  bio    String?
-  userId Int     @unique
-  user   User    @relation(fields: [userId], references: [id])
-}
-
 model User {
-  id      Int      @id @default(autoincrement())
-  name    String? 
-  email   String   
-  post    Post[]
-  profile Profile?
+  id         Int      @id @default(autoincrement())
+  first_name String
+  last_name  String
+  email      String   @unique
+  password   String
+  gender     String
+  job        String
+  jobDes     String
+  avatar_url String
+  birth      String
+  country    String
+  city       String
+  about      String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  skills     Skill[]
+  photos     Photo[]
+  socials    Social[]
+  likes      Like[]
+  rejects    Reject[]
+  mathces    Match[]
 }
 
-model Tag {
-  id    Int    @id @default(autoincrement())
-  name  String
-  posts Post[]
+model Skill {
+  id      Int    @id @default(autoincrement())
+  skill    String
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id Int
+}
+
+model Photo {
+  id      Int    @id @default(autoincrement())
+  url     String
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id Int
+}
+
+model Social {
+  id               Int    @id @default(autoincrement())
+  personal_website String
+  facebook         String
+  twitter          String
+  linkedin         String
+  github           String
+  instagram        String
+  user             User   @relation(fields: [user_id], references: [id])
+  user_id          Int
+}
+
+model Like {
+  id           Int  @id @default(autoincrement())
+  user         User @relation(fields: [user_id], references: [id])
+  user_id      Int
+  likedUser_id Int
+
+  @@unique([user_id, likedUser_id])
+}
+
+model Reject {
+  id              Int  @id @default(autoincrement())
+  user            User @relation(fields: [user_id], references: [id])
+  user_id         Int
+  rejectedUser_id Int
+
+  @@unique([user_id, rejectedUser_id])
+}
+
+model Match {
+  id             Int  @id @default(autoincrement())
+  user           User @relation(fields: [user_id], references: [id])
+  user_id        Int
+  matchedUser_id Int
+
+  @@unique([user_id, matchedUser_id])
 }
