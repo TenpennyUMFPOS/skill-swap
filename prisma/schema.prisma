@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -26,26 +23,26 @@ model User {
   about      String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  likes      Like[]
+  mathces    Match[]
   skills     Skill[]
   photos     Photo[]
-  socials    Social[]
-  likes      Like[]
   rejects    Reject[]
-  mathces    Match[]
+  socials    Social[]
 }
 
 model Skill {
   id      Int    @id @default(autoincrement())
-  skill    String
-  user    User   @relation(fields: [user_id], references: [id])
+  skill   String
   user_id Int
+  user    User   @relation(fields: [user_id], references: [id])
 }
 
 model Photo {
   id      Int    @id @default(autoincrement())
   url     String
-  user    User   @relation(fields: [user_id], references: [id])
   user_id Int
+  user    User   @relation(fields: [user_id], references: [id])
 }
 
 model Social {
@@ -56,33 +53,33 @@ model Social {
   linkedin         String
   github           String
   instagram        String
-  user             User   @relation(fields: [user_id], references: [id])
   user_id          Int
+  user             User   @relation(fields: [user_id], references: [id])
 }
 
 model Like {
   id           Int  @id @default(autoincrement())
-  user         User @relation(fields: [user_id], references: [id])
   user_id      Int
   likedUser_id Int
+  user         User @relation(fields: [user_id], references: [id])
 
   @@unique([user_id, likedUser_id])
 }
 
 model Reject {
   id              Int  @id @default(autoincrement())
-  user            User @relation(fields: [user_id], references: [id])
   user_id         Int
   rejectedUser_id Int
+  user            User @relation(fields: [user_id], references: [id])
 
   @@unique([user_id, rejectedUser_id])
 }
 
 model Match {
   id             Int  @id @default(autoincrement())
-  user           User @relation(fields: [user_id], references: [id])
   user_id        Int
   matchedUser_id Int
+  user           User @relation(fields: [user_id], references: [id])
 
   @@unique([user_id, matchedUser_id])
 }
