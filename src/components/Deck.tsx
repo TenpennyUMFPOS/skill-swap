@@ -66,6 +66,7 @@ function Deck() {
         return x
     }
     // Now we're just mapping the animated values to our view, that's it. Btw, this component only renders once. :-)
+    
 
     return (
         <>
@@ -78,7 +79,7 @@ function Deck() {
                             transform: interpolate([rot, scale], trans),
                         }}
                     >
-                        <UserCard api={api} gone={gone} index={i}/>
+                        <UserCard api={api} gone={gone} index={i} />
                     </animated.div>
                 </animated.div>
             ))}
