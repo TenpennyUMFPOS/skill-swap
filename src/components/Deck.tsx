@@ -6,16 +6,11 @@ import { useDrag } from 'react-use-gesture'
 import { init } from "@/lib/features/deck-slice"
 import styles from '@/styles/styles.module.css'
 import UserCard from './UserCard'
+import { User } from '@prisma/client'
+import likeAction from "@/app/actions/like"
+import rejectAction from "@/app/actions/reject";
 
 
-const cards = [
-    'https://upload.wikimedia.org/wikipedia/commons/f/f5/RWS_Tarot_08_Strength.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/5/53/RWS_Tarot_16_Tower.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/9/9b/RWS_Tarot_07_Chariot.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/d/db/RWS_Tarot_06_Lovers.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/RWS_Tarot_02_High_Priestess.jpg/690px-RWS_Tarot_02_High_Priestess.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/d/de/RWS_Tarot_01_Magician.jpg',
-]
 
 // These two are just helpers, they curate spring data, values that are later being interpolated into css
 const to = (i: number) => ({
@@ -29,20 +24,28 @@ const from = (_i: number) => ({ x: 0, rot: 0, scale: 1, y: 0 })
 const trans = (r: number, s: number) =>
     ` rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`
 
-function Deck() {
+function Deck({ feeds }: { feeds: User[] }) {
 
     const [gone] = useState(() => new Set<number>()) // The set flags all the cards that are flicked out
-    const [props, api] = useSprings(cards.length, i => ({
+    const [props, api] = useSprings(feeds.length, i => ({
         from: from(i),
         ...to(i),
     }))
-
+    const performLike = async (i: number) => {
+        await likeAction(feeds[i])
+    }
+    const performReject = async (i: number) => {
+        await rejectAction(feeds[i])
+    }
     const bind = useDrag(({ args: [index], down, movement: [mx], direction: [xDir], velocity, distance }) => {
         const dir = xDir < 0 ? -1 : 1
         api.start(i => {
             if (index != i) return
-            if (!down && distance > 200)
+            if (!down && distance > 200) {
                 gone.add(index)
+                if (dir == 1) performLike(i)
+                else if (dir == -1) performReject(i)
+            }
             const isGone = gone.has(index)
             const x = isGone ? (200 + window.innerWidth) * dir : down ? calculateX(mx) : 0
             const rot = down ? mx / 15 : isGone ? (200 + window.innerWidth) * dir / 15 : 0
@@ -79,7 +82,7 @@ function Deck() {
                             transform: interpolate([rot, scale], trans),
                         }}
                     >
-                        <UserCard api={api} gone={gone} index={i} />
+                        <UserCard api={api} gone={gone} index={i} profile={feeds[i]} />
                     </animated.div>
                 </animated.div>
             ))}

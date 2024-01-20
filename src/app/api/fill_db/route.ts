@@ -2,8 +2,7 @@ import fs from "fs";
 import path from "path";
 import { PrismaClient, Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
-
-const prisma = new PrismaClient();
+import prisma from "@/app/db";
 
 export async function GET(request: Request) {
   const filePath = path.join(process.cwd(), "data.json");
