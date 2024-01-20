@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSprings, animated, to as interpolate } from '@react-spring/web'
 import { useDrag } from 'react-use-gesture'
 import { init } from "@/lib/features/deck-slice"
@@ -24,13 +24,15 @@ const from = (_i: number) => ({ x: 0, rot: 0, scale: 1, y: 0 })
 const trans = (r: number, s: number) =>
     ` rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`
 
-function Deck({ feeds }: { feeds: User[] }) {
-
+function Deck({ innitialFeeds }: { innitialFeeds: User[] }) {
+    const [feeds, setFeeds] = useState(innitialFeeds)
     const [gone] = useState(() => new Set<number>()) // The set flags all the cards that are flicked out
     const [props, api] = useSprings(feeds.length, i => ({
         from: from(i),
         ...to(i),
     }))
+
+
     const performLike = async (i: number) => {
         await likeAction(feeds[i])
     }
@@ -45,6 +47,7 @@ function Deck({ feeds }: { feeds: User[] }) {
                 gone.add(index)
                 if (dir == 1) performLike(i)
                 else if (dir == -1) performReject(i)
+
             }
             const isGone = gone.has(index)
             const x = isGone ? (200 + window.innerWidth) * dir : down ? calculateX(mx) : 0

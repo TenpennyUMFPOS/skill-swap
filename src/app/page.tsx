@@ -37,7 +37,7 @@ export default async function Home() {
 
     <>
       <main className="relative flex justify-center items-center overflow-x-hidden h-screen bg-gray-400">
-        <Deck feeds={feeds} />
+        <Deck innitialFeeds={feeds} />
       </main>
     </>
   )
