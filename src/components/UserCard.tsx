@@ -39,7 +39,7 @@ export default function UserCard({ api, gone, index, profile }:
         api.start(i => {
             if (index != i) return
             gone.add(index)
-
+            gone.clear()
             const x = (200 + window.innerWidth) * dir
             const rot = (200 + window.innerWidth) * dir / 15
             const scale = 1

@@ -32,7 +32,6 @@ function Deck({ innitialFeeds }: { innitialFeeds: User[] }) {
         ...to(i),
     }))
 
-
     const performLike = async (i: number) => {
         await likeAction(feeds[i])
     }
@@ -47,7 +46,7 @@ function Deck({ innitialFeeds }: { innitialFeeds: User[] }) {
                 gone.add(index)
                 if (dir == 1) performLike(i)
                 else if (dir == -1) performReject(i)
-
+                if (gone.size == 10) gone.clear()
             }
             const isGone = gone.has(index)
             const x = isGone ? (200 + window.innerWidth) * dir : down ? calculateX(mx) : 0
