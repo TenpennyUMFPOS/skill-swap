@@ -1,8 +1,10 @@
 import { PrismaClient } from "@prisma/client";
-import type { NextAuthOptions } from "next-auth";
+import type { Awaitable, NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/app/db";
+import { PrismaAdapter } from "@auth/prisma-adapter";
 export const options: NextAuthOptions = {
+  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       // The name to display on the sign in form (e.g. "Sign in with...")

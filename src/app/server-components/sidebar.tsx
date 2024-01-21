@@ -14,8 +14,6 @@ export async function Sidebar() {
     const session: Session = await getServerSession(handler) as Session
     if (!session.user) return
     const user = prisma.user.findUnique({ where: { email: session.user.email! } }) as unknown as User
-    const matches = await prisma.match.findMany({ where: { user_id: user.id } })
-
     return (
         <div className='w-1/4 h-screen bg-blue-200'>
             <div className="h-24 w-full p-4 bg-amber-600 flex justify-between items-center">

@@ -1,9 +1,10 @@
 "use client"
-import { DocumentData, QueryDocumentSnapshot, onSnapshot } from "firebase/firestore";
+import { DocumentData, QueryDocumentSnapshot, onSnapshot, query, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { matchesCollectionRef } from "../../../../initializeFirebase.local";
 import { TabsContent } from "@/components/ui/tabs";
 import { MatchCard } from "./match-card";
+import { useSession } from "next-auth/react";
 
 
 type Match = {
@@ -12,8 +13,11 @@ type Match = {
 }
 export const MatchTab = () => {
     const [matches, setMatches] = useState<Match[]>([]);
+    /* const { data } = useSession();
+    if (!data) return */
 
     useEffect(() => {
+        /* const q = query(matchesCollectionRef, where("user_id", "==", 1)); */
         const unsubscribe = onSnapshot(matchesCollectionRef, snapshot => {
             setMatches(snapshot.docs.map(doc => ({ id: doc.id, data: doc.data() })))
         })
@@ -27,9 +31,7 @@ export const MatchTab = () => {
                         <MatchCard data={match.data} key={match.id} />
                     );
                 })
-
                 }
-
             </div>
         </TabsContent>
     );
