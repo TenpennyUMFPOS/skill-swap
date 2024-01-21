@@ -2,17 +2,18 @@
 import { CardContent, CardFooter, Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { HeartIcon } from '@radix-ui/react-icons'
-import { SpringRef} from "@react-spring/web";
+import { SpringRef } from "@react-spring/web";
 import { User } from "@prisma/client";
 import likeAction from "@/app/actions/like"
 import rejectAction from "@/app/actions/reject";
 
-export default function UserCard({ api, gone, index, profile }:
+export default function UserCard({ api, gone, index, profile, setSwipe }:
     {
         api: SpringRef<{ x: number, y: number, scale: number, rot: number }>,
         gone: Set<number>,
         index: number,
-        profile: User
+        profile: User,
+        setSwipe: React.Dispatch<React.SetStateAction<boolean>>
     }) {
 
     const like = async () => {
@@ -39,7 +40,7 @@ export default function UserCard({ api, gone, index, profile }:
         api.start(i => {
             if (index != i) return
             gone.add(index)
-            gone.clear()
+            setSwipe(true)
             const x = (200 + window.innerWidth) * dir
             const rot = (200 + window.innerWidth) * dir / 15
             const scale = 1

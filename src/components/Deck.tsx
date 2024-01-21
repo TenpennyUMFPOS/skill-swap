@@ -9,6 +9,7 @@ import UserCard from './UserCard'
 import { User } from '@prisma/client'
 import likeAction from "@/app/actions/like"
 import rejectAction from "@/app/actions/reject";
+import feedsHydration from '@/app/actions/feedsHydration'
 
 
 
@@ -25,13 +26,31 @@ const trans = (r: number, s: number) =>
     ` rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`
 
 function Deck({ innitialFeeds }: { innitialFeeds: User[] }) {
-    const [feeds, setFeeds] = useState(innitialFeeds)
+    const [feeds, setFeeds] = useState<User[]>(innitialFeeds)
     const [gone] = useState(() => new Set<number>()) // The set flags all the cards that are flicked out
+    const [swipe, setSwipe] = useState(false)
     const [props, api] = useSprings(feeds.length, i => ({
         from: from(i),
         ...to(i),
     }))
+    useEffect(() => {
+        if (swipe == true) {
+            console.log(gone.size)
+            if (gone.size == feeds.length) {
+                console.log("all cards are gone")
+                feedsHydration().then((freshFeeds: User[]) => {
+                    gone.clear();
+                    setFeeds(freshFeeds)
+                    api.start(i => ({
+                        ...to(i),
+                        from: from(i),
+                    }))
 
+                }).catch(err => console.log(err))
+            }
+            setSwipe(false)
+        }
+    }, [swipe])
     const performLike = async (i: number) => {
         await likeAction(feeds[i])
     }
@@ -44,9 +63,9 @@ function Deck({ innitialFeeds }: { innitialFeeds: User[] }) {
             if (index != i) return
             if (!down && distance > 200) {
                 gone.add(index)
+                setSwipe(true)
                 if (dir == 1) performLike(i)
                 else if (dir == -1) performReject(i)
-                if (gone.size == 10) gone.clear()
             }
             const isGone = gone.has(index)
             const x = isGone ? (200 + window.innerWidth) * dir : down ? calculateX(mx) : 0
@@ -71,7 +90,7 @@ function Deck({ innitialFeeds }: { innitialFeeds: User[] }) {
         return x
     }
     // Now we're just mapping the animated values to our view, that's it. Btw, this component only renders once. :-)
-    
+
 
     return (
         <>
@@ -84,7 +103,7 @@ function Deck({ innitialFeeds }: { innitialFeeds: User[] }) {
                             transform: interpolate([rot, scale], trans),
                         }}
                     >
-                        <UserCard api={api} gone={gone} index={i} profile={feeds[i]} />
+                        <UserCard api={api} gone={gone} index={i} profile={feeds[i]} setSwipe={setSwipe} />
                     </animated.div>
                 </animated.div>
             ))}
