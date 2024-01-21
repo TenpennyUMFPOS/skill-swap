@@ -1,15 +1,17 @@
 import Image from 'next/image'
 import Deck from '../components/Deck'
-import { getServerSession } from 'next-auth'
+import { Session, getServerSession } from 'next-auth'
 import { handler } from './api/auth/[...nextauth]/route'
 import { PrismaClient, type User } from '@prisma/client'
 import prisma from './db'
+import { Sidebar } from './server-components/sidebar'
+
 
 export default async function Home() {
-  const session = await getServerSession(handler)
-  if (!session) return
+  const session = await getServerSession(handler) as Session
+  if (!session.user) return
 
-  const user = prisma.user.findUnique({ where: { email: session.user.email } })
+  const user: User = prisma.user.findUnique({ where: { email: session.user.email! } }) as unknown as User
   const feeds = await prisma.user.findMany({
     take: 10,
     where: {
@@ -31,14 +33,17 @@ export default async function Home() {
       ]
     }
   });
-  /* const feeds = await prisma.user.findMany({ take: 10 }) */
+
 
   return (
 
     <>
-      <main className="relative flex justify-center items-center overflow-x-hidden h-screen bg-gray-400">
-        <Deck innitialFeeds={feeds} />
-      </main>
+      <div className='flex'>
+        <Sidebar />
+        <main className="w-3/4 relative flex justify-center items-center overflow-x-hidden h-screen bg-gray-400">
+          <Deck innitialFeeds={feeds} />
+        </main>   
+      </div>
     </>
   )
 }

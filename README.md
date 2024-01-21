@@ -1,2 +1,1 @@
-- idea to have profile feeds: get a pack of 10 profiles served for the client and cached in client
-- while we serve 10 in the client we get the max= 20 in the server already cached if we reach the end tell the client that he has to extend his search
+

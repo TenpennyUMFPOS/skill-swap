@@ -10,6 +10,7 @@ import { User } from '@prisma/client'
 import likeAction from "@/app/actions/like"
 import rejectAction from "@/app/actions/reject";
 import feedsHydration from '@/app/actions/feedsHydration'
+import { Spinner } from './ui/spinner'
 
 
 
@@ -28,15 +29,18 @@ const trans = (r: number, s: number) =>
 function Deck({ innitialFeeds }: { innitialFeeds: User[] }) {
     const [feeds, setFeeds] = useState<User[]>(innitialFeeds)
     const [gone] = useState(() => new Set<number>()) // The set flags all the cards that are flicked out
+    const [loading, setLoading] = useState(false)
     const [swipe, setSwipe] = useState(false)
     const [props, api] = useSprings(feeds.length, i => ({
         from: from(i),
         ...to(i),
     }))
     useEffect(() => {
+        let timeout: NodeJS.Timeout
         if (swipe == true) {
             console.log(gone.size)
             if (gone.size == feeds.length) {
+                setLoading(true)
                 console.log("all cards are gone")
                 feedsHydration().then((freshFeeds: User[]) => {
                     gone.clear();
@@ -45,10 +49,14 @@ function Deck({ innitialFeeds }: { innitialFeeds: User[] }) {
                         ...to(i),
                         from: from(i),
                     }))
+                    timeout = setInterval(() => {
+                        setLoading(false)
+                    }, 1000)
 
                 }).catch(err => console.log(err))
             }
             setSwipe(false)
+            return () => clearInterval(timeout)
         }
     }, [swipe])
     const performLike = async (i: number) => {
@@ -91,7 +99,7 @@ function Deck({ innitialFeeds }: { innitialFeeds: User[] }) {
     }
     // Now we're just mapping the animated values to our view, that's it. Btw, this component only renders once. :-)
 
-
+    if (loading) return (<Spinner />)
     return (
         <>
             {props.map(({ x, y, rot, scale }, i) => (
