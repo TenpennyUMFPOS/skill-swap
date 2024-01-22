@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ClerkProvider>
+        <ClerkProvider afterSignUpUrl="/complete-profile">
           {children}
         </ClerkProvider>
         <Toaster />

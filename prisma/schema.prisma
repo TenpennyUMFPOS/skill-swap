@@ -28,6 +28,7 @@ model User {
   photos     Photo[]
   rejects    Reject[]
   socials    Social[]
+  profile_completed Boolean @default(false)
 }
 
 model Skill {
