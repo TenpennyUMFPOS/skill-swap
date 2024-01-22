@@ -30,7 +30,6 @@ export const SidebarTabs = () => {
             snapshot.docChanges().forEach((change) => {
                 if (change.type === "added") {
                     setMatches((prev) => [...prev, { id: change.doc.id, data: change.doc.data() }])
-
                 }
             })
         })
@@ -53,7 +52,7 @@ export const SidebarTabs = () => {
                 </TabsTrigger>
             </TabsList>
 
-            <MatchTab matches={matches}/>
+            <MatchTab matches={matches} />
             <TabsContent className="p-4 transition-all duration-300 ease-in-out" value="messages">
                 <h2 className="text-xl font-bold">welcome to the messages tab</h2>
                 <p className="text-gray-500">This is the tab where there are the list of all messages</p>
