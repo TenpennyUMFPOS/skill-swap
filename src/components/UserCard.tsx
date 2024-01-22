@@ -6,24 +6,29 @@ import { SpringRef } from "@react-spring/web";
 import { User } from "@prisma/client";
 import likeAction from "@/app/actions/like"
 import rejectAction from "@/app/actions/reject";
+import { ShowMatchToast } from "@/app/server-components/match/show-match-toast";
 
 export default function UserCard({ api, gone, index, profile, setSwipe }:
-    {
+    Readonly<{
         api: SpringRef<{ x: number, y: number, scale: number, rot: number }>,
         gone: Set<number>,
         index: number,
         profile: User,
         setSwipe: React.Dispatch<React.SetStateAction<boolean>>
-    }) {
+    }>) {
 
     const like = async () => {
         performAction(1);
-        await likeAction(profile);
+        const isMatch = await likeAction(profile.id);
+
+        if (isMatch) {
+            ShowMatchToast();
+        }
 
     }
     const reject = async () => {
         performAction(-1)
-        await rejectAction(profile);
+        await rejectAction(profile.id);
     }
     function calculateAge(birthdate: string) {
         const birthDate = new Date(birthdate);

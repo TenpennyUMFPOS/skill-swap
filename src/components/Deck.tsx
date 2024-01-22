@@ -11,7 +11,7 @@ import likeAction from "@/app/actions/like"
 import rejectAction from "@/app/actions/reject";
 import feedsHydration from '@/app/actions/feedsHydration'
 import { Spinner } from './ui/spinner'
-
+import { ShowMatchToast } from '@/app/server-components/match/show-match-toast'
 
 
 // These two are just helpers, they curate spring data, values that are later being interpolated into css
@@ -60,10 +60,14 @@ function Deck({ innitialFeeds }: { innitialFeeds: User[] }) {
         }
     }, [swipe])
     const performLike = async (i: number) => {
-        await likeAction(feeds[i])
+        const isMatch = await likeAction(feeds[i].id)
+
+        if (isMatch) {
+            ShowMatchToast();
+        }
     }
     const performReject = async (i: number) => {
-        await rejectAction(feeds[i])
+        await rejectAction(feeds[i].id)
     }
     const bind = useDrag(({ args: [index], down, movement: [mx], direction: [xDir], velocity, distance }) => {
         const dir = xDir < 0 ? -1 : 1

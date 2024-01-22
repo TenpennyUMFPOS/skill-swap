@@ -7,6 +7,7 @@ import prisma from "../db";
 import { User } from "@prisma/client";
 import { MatchTab } from "./match/match-Tab";
 import { auth } from "@clerk/nextjs";
+import { SidebarTabs } from "../client-components/tabs/sidebar-tabs";
 
 export async function Sidebar() {
     const { userId } = auth();
@@ -25,28 +26,7 @@ export async function Sidebar() {
                 </div>
             </div>
             <div className="">
-                <Tabs className="w-full " defaultValue="matches">
-                    <TabsList className="flex gap-4 justify-start">
-                        <TabsTrigger value="matches">
-                            <div className="flex items-center gap-2">
-                                <Flame />
-                                <span>Matches</span>
-                            </div>
-                        </TabsTrigger>
-                        <TabsTrigger value="messages">
-                            <div className="flex items-center gap-2">
-                                <Mail />
-                                <span> Messages</span>
-                            </div>
-                        </TabsTrigger>
-                    </TabsList>
-
-                    <MatchTab />
-                    <TabsContent className="p-4 transition-all duration-300 ease-in-out" value="messages">
-                        <h2 className="text-xl font-bold">welcome to the messages tab</h2>
-                        <p className="text-gray-500">This is the tab where there are the list of all messages</p>
-                    </TabsContent>
-                </Tabs>
+                <SidebarTabs/>
             </div>
         </div >
     );

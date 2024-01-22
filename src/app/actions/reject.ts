@@ -1,19 +1,18 @@
 "use server";
 
-import { type User } from "@prisma/client";
+import {type Reject, type User } from "@prisma/client";
 import prisma from "../db";
 import { auth } from "@clerk/nextjs";
 
-export default async function rejectAction(rejectedUser: User) {
+export default async function rejectAction(rejectedUser_id: string) {
   const { userId } = auth();
   if (!userId) return;
-  const user: User = await prisma.user.findUnique({
-    where: { id: userId },
-  }) as unknown as User;
-  const reject = await prisma.reject.create({
+
+  
+  await prisma.reject.create({
     data: {
-      user_id: user.id,
-      rejectedUser_id: rejectedUser.id,
+      user_id: userId,
+      rejectedUser_id: rejectedUser_id,
     },
   });
  
