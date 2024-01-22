@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { matchesCollectionRef } from "../../../../initializeFirebase.local";
 import { TabsContent } from "@/components/ui/tabs";
 import { MatchCard } from "./match-card";
-import { useSession } from "next-auth/react";
+
 
 
 type Match = {
@@ -13,9 +13,7 @@ type Match = {
 }
 export const MatchTab = () => {
     const [matches, setMatches] = useState<Match[]>([]);
-    /* const { data } = useSession();
-    if (!data) return */
-
+  
     useEffect(() => {
         /* const q = query(matchesCollectionRef, where("user_id", "==", 1)); */
         const unsubscribe = onSnapshot(matchesCollectionRef, snapshot => {

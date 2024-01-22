@@ -1,28 +1,27 @@
 
 "use server"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { getServerSession } from "next-auth";
-import { handler } from "../api/auth/[...nextauth]/route";
+import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { TabsTrigger, TabsList, TabsContent, Tabs } from "@/components/ui/tabs"
 import { Flame, Mail } from "lucide-react";
-import { type Session } from "next-auth";
 import prisma from "../db";
 import { User } from "@prisma/client";
 import { MatchTab } from "./match/match-Tab";
+import { auth } from "@clerk/nextjs";
 
 export async function Sidebar() {
-    const session: Session = await getServerSession(handler) as Session
-    if (!session.user) return
-    const user = prisma.user.findUnique({ where: { email: session.user.email! } }) as unknown as User
+    const { userId } = auth();
+    if (!userId) return
+    const user: User = await prisma.user.findUnique({ where: { id: userId } }) as unknown as User
+
     return (
         <div className='w-1/4 h-screen bg-blue-200'>
             <div className="h-24 w-full p-4 bg-amber-600 flex justify-between items-center">
                 {/* avatar */}
                 <div className=" flex gap-2 items-center">
                     <Avatar>
-                        <AvatarImage src={session.user.image!} />
+                        <AvatarImage src={user.avatar_url} />
                     </Avatar>
-                    <div className="text-xl font-semibold text-slate-100">{session.user.name}</div>
+                    <div className="text-xl font-semibold text-slate-100">{user.first_name + " " + user.last_name}</div>
                 </div>
             </div>
             <div className="">
@@ -41,6 +40,7 @@ export async function Sidebar() {
                             </div>
                         </TabsTrigger>
                     </TabsList>
+
                     <MatchTab />
                     <TabsContent className="p-4 transition-all duration-300 ease-in-out" value="messages">
                         <h2 className="text-xl font-bold">welcome to the messages tab</h2>

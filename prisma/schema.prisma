@@ -8,11 +8,10 @@ datasource db {
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
+  id                 String  @id @default(cuid())
   first_name String
   last_name  String
   email      String   @unique
-  password   String
   gender     String
   job        String
   jobDes     String
@@ -29,93 +28,58 @@ model User {
   photos     Photo[]
   rejects    Reject[]
   socials    Social[]
-  accounts      Account[]
-  sessions      Session[]
+  
 }
 
 model Skill {
-  id      Int    @id @default(autoincrement())
+  id                 String  @id @default(cuid())
   skill   String
-  user_id Int
+  user_id String
   user    User   @relation(fields: [user_id], references: [id])
 }
 
 model Photo {
-  id      Int    @id @default(autoincrement())
+  id                 String  @id @default(cuid())
   url     String
-  user_id Int
+  user_id String
   user    User   @relation(fields: [user_id], references: [id])
 }
 
 model Social {
-  id               Int    @id @default(autoincrement())
+  id                 String  @id @default(cuid())
   personal_website String
   facebook         String
   twitter          String
   linkedin         String
   github           String
   instagram        String
-  user_id          Int
+  user_id          String
   user             User   @relation(fields: [user_id], references: [id])
 }
 
 model Like {
-  id           Int  @id @default(autoincrement())
-  user_id      Int
-  likedUser_id Int
+  id                 String  @id @default(cuid())
+  user_id      String
+  likedUser_id String
   user         User @relation(fields: [user_id], references: [id])
 
   @@unique([user_id, likedUser_id])
 }
 
 model Reject {
-  id              Int  @id @default(autoincrement())
-  user_id         Int
-  rejectedUser_id Int
+  id                 String  @id @default(cuid())
+  user_id         String
+  rejectedUser_id String
   user            User @relation(fields: [user_id], references: [id])
 
   @@unique([user_id, rejectedUser_id])
 }
 
 model Match {
-  id             Int  @id @default(autoincrement())
-  user_id        Int
-  matchedUser_id Int
+  id                 String  @id @default(cuid())
+  user_id        String
+  matchedUser_id String
   user           User @relation(fields: [user_id], references: [id])
 
   @@unique([user_id, matchedUser_id])
-}
-
-model Account {
-  id                 Int  @id @default(autoincrement())
-  user_id             Int
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  
-  access_token       String?  
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  
-  session_state      String?
-
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-}
-model Session {
-  id                 Int  @id @default(autoincrement())
-  sessionToken String   @unique
-  user_id       Int
-  expires      DateTime
-  user         User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-}
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
 }

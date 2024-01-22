@@ -6,7 +6,7 @@ import { DocumentData } from "firebase/firestore";
 
 import { useEffect, useState } from "react";
 export const MatchCard = ({ data }: { data: DocumentData }) => {
-    const [user, setUser] = useState<{ id: number, first_name: string, last_name: string, avatar_url: string } | null>();
+    const [user, setUser] = useState<{ id: string, first_name: string, last_name: string, avatar_url: string } | null>();
     useEffect(() => {
         GetUser(data.matchedUser_id).then(user => setUser(user))
     }, [])

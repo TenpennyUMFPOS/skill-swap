@@ -1,13 +1,13 @@
 "use server";
-import { Session, getServerSession } from "next-auth";
-import { handler } from "../api/auth/[...nextauth]/route";
-import { PrismaClient, User } from "@prisma/client";
+
+import { type User } from "@prisma/client";
 import prisma from "../db";
+import { auth } from "@clerk/nextjs";
 
 export default async function feedsHydration(): Promise<User[]> {
-  const session: Session = await getServerSession(handler) as Session;
-  if (!session.user) throw new Error("No session found");
-  const user = prisma.user.findUnique({ where: { email: session.user.email! } }) as unknown as User;
+  const { userId } = auth();
+  if (!userId) throw new Error("User not authenticated");
+  const user: User = await prisma.user.findUnique({ where: { id: userId } }) as unknown as User
   const feeds = await prisma.user.findMany({
     take: 10,
     where: {

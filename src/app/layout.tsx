@@ -1,9 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import '@/styles/globals.css'
-import StoreProvider from "./storeProvider"
-import { SessionProvider } from "next-auth/react"
-import AuthProvider from './context/authProvider'
+import { ClerkProvider } from '@clerk/nextjs'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -19,9 +17,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AuthProvider>
+        <ClerkProvider>
           {children}
-        </AuthProvider>
+        </ClerkProvider>
       </body>
     </html>
   )
