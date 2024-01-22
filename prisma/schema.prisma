@@ -13,9 +13,9 @@ model User {
   last_name  String
   email      String   @unique
   gender     String
-  job        String
-  jobDes     String
-  avatar_url String
+  job        String?
+  jobDes     String?
+  avatar_url String?
   birth      String
   country    String
   city       String
@@ -28,7 +28,6 @@ model User {
   photos     Photo[]
   rejects    Reject[]
   socials    Social[]
-  
 }
 
 model Skill {
@@ -47,12 +46,12 @@ model Photo {
 
 model Social {
   id                 String  @id @default(cuid())
-  personal_website String
-  facebook         String
-  twitter          String
-  linkedin         String
-  github           String
-  instagram        String
+  personal_website String?
+  facebook         String?
+  twitter          String?
+  linkedin         String?
+  github           String?
+  instagram        String?
   user_id          String
   user             User   @relation(fields: [user_id], references: [id])
 }
