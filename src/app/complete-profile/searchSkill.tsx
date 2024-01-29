@@ -14,6 +14,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import { Spinner } from "@/components/ui/spinner"
 export const SearchSkill = ({ skills, setSkills }: { skills: string[], setSkills: Dispatch<SetStateAction<string[]>> }) => {
     const [searchSkill, setSearchSkill] = useState('')
     const [searchResult, setSearchResult] = useState<string[]>([])
@@ -84,7 +85,7 @@ export const SearchSkill = ({ skills, setSkills }: { skills: string[], setSkills
                             onChange={(e) => setSearchSkill(e.target.value)}
                         />
                         <div className="py-2 grid grid-cols-3 gap-4">
-                            {isLoading ? <div>Loading...</div> :
+                            {isLoading ? <Spinner /> :
                                 searchResult?.map((res, index) => {
                                     return (
                                         <Button key={index} variant="outline" type="button" onClick={() => selectSkill(res)}> {res}</Button>
