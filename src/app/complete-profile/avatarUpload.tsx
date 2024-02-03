@@ -45,6 +45,7 @@ export const AvatarUpload = () => {
         className="hidden"
         id="avatar"
         type="file"
+        accept="image/png, image/gif, image/jpeg"
         onChange={handleFileChange}
         name="avatar"
       />

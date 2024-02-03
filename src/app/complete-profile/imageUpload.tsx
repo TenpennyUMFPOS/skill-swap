@@ -40,6 +40,7 @@ export const ImageUpload = ({ name }: { name: string }) => {
       <input
         name={name}
         type="file"
+        accept="image/png, image/gif, image/jpeg"
         id={"uploadBtn-" + name}
         className="hidden"
         onChange={handleFileChange}

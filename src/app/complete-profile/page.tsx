@@ -120,6 +120,7 @@ export default function CompleteProfile() {
                     <Textarea
                       id="about"
                       onChange={(e) => setAbout(e.target.value)}
+                      name="about"
                     />
                   </div>
                   <div className="flex gap-3">
@@ -190,9 +191,9 @@ export default function CompleteProfile() {
                     })}
                   </div>
                   <div className="grid grid-cols-3 gap-4">
+                    <ImageUpload name="img-0" />
                     <ImageUpload name="img-1" />
                     <ImageUpload name="img-2" />
-                    <ImageUpload name="img-3" />
                   </div>
                   <p className="text-xs text-gray-500">
                     Make your profile unique

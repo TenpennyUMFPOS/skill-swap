@@ -8,41 +8,41 @@ datasource db {
 }
 
 model User {
-  id                 String  @id @default(cuid())
-  first_name String
-  last_name  String
-  email      String   @unique
-  gender     String
-  avatar_url String?
-  birth      String
-  about      String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  likes      Like[]
-  matches    Match[]
-  skills     Skill[]
-  photos     Photo[]
-  rejects    Reject[]
-  socials    Social[]
-  profile_completed Boolean @default(false)
+  id                String   @id @default(cuid())
+  first_name        String
+  last_name         String
+  email             String   @unique
+  gender            String
+  avatar_url        String
+  birth             String
+  about             String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  profile_completed Boolean  @default(false)
+  likes             Like[]
+  matches           Match[]
+  photos            Photo[]
+  rejects           Reject[]
+  skills            Skill[]
+  socials           Social[]
 }
 
 model Skill {
-  id                 String  @id @default(cuid())
+  id      String @id @default(cuid())
   skill   String
   user_id String
   user    User   @relation(fields: [user_id], references: [id])
 }
 
 model Photo {
-  id                 String  @id @default(cuid())
+  id      String @id @default(cuid())
   url     String
   user_id String
   user    User   @relation(fields: [user_id], references: [id])
 }
 
 model Social {
-  id                 String  @id @default(cuid())
+  id               String  @id @default(cuid())
   personal_website String?
   facebook         String?
   twitter          String?
@@ -50,32 +50,32 @@ model Social {
   github           String?
   instagram        String?
   user_id          String
-  user             User   @relation(fields: [user_id], references: [id])
+  user             User    @relation(fields: [user_id], references: [id])
 }
 
 model Like {
-  id                 String  @id @default(cuid())
+  id           String @id @default(cuid())
   user_id      String
   likedUser_id String
-  user         User @relation(fields: [user_id], references: [id])
+  user         User   @relation(fields: [user_id], references: [id])
 
   @@unique([user_id, likedUser_id])
 }
 
 model Reject {
-  id                 String  @id @default(cuid())
+  id              String @id @default(cuid())
   user_id         String
   rejectedUser_id String
-  user            User @relation(fields: [user_id], references: [id])
+  user            User   @relation(fields: [user_id], references: [id])
 
   @@unique([user_id, rejectedUser_id])
 }
 
 model Match {
-  id                 String  @id @default(cuid())
+  id             String @id @default(cuid())
   user_id        String
   matchedUser_id String
-  user           User @relation(fields: [user_id], references: [id])
+  user           User   @relation(fields: [user_id], references: [id])
 
   @@unique([user_id, matchedUser_id])
 }
