@@ -1,6 +1,8 @@
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { useState } from "react";
 
-export const ImageUpload = ({ name }: { name: string }) => {
+export const AvatarUpload = () => {
   const [selectedFile, setSelectedFile] = useState<{
     file: File;
     previewURL: string | ArrayBuffer | null;
@@ -26,28 +28,31 @@ export const ImageUpload = ({ name }: { name: string }) => {
     }
   };
   const handleContainerClick = () => {
-    document.getElementById(`uploadBtn-${name}`)?.click();
+    document.getElementById("avatar")?.click();
   };
+
   return (
     <div
-      className="h-[250px] border-dashed border-2 border-gray-300 rounded-md p-12 flex justify-center items-center bg-no-repeat bg-center bg-cover"
+      className="w-20 h-20 rounded-lg bg-gray-900 flex items-center justify-center my-3 bg-no-repeat bg-center bg-cover"
       onClick={handleContainerClick}
       style={
         selectedFile && { backgroundImage: `url(${selectedFile.previewURL})` }
       }
     >
-      {!selectedFile && <PlusIcon className="h-6 text-gray-400" />}
-      <input
-        name={name}
-        type="file"
-        id={"uploadBtn-" + name}
+      {!selectedFile && <CameraIcon className="h-10 w-10 text-white" />}
+
+      <Input
         className="hidden"
+        id="avatar"
+        type="file"
         onChange={handleFileChange}
+        name="avatar"
       />
     </div>
   );
 };
-function PlusIcon(props: any) {
+
+function CameraIcon(props: any) {
   return (
     <svg
       {...props}
@@ -61,8 +66,8 @@ function PlusIcon(props: any) {
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <path d="M5 12h14" />
-      <path d="M12 5v14" />
+      <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+      <circle cx="12" cy="13" r="3" />
     </svg>
   );
 }

@@ -13,17 +13,13 @@ model User {
   last_name  String
   email      String   @unique
   gender     String
-  job        String?
-  jobDes     String?
   avatar_url String?
   birth      String
-  country    String
-  city       String
   about      String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   likes      Like[]
-  mathces    Match[]
+  matches    Match[]
   skills     Skill[]
   photos     Photo[]
   rejects    Reject[]
