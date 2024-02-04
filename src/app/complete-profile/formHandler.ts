@@ -1,7 +1,7 @@
 "use server";
 import { storage } from "../../../initializeFirebase.local";
 import { ref, uploadBytes } from "firebase/storage";
-import { auth } from "@clerk/nextjs";
+import { auth, currentUser } from "@clerk/nextjs";
 import { File } from "buffer";
 import { createHash } from "crypto";
 import sharp from "sharp";
@@ -12,7 +12,7 @@ type UserData = {
   avatar: File;
   first_name: string;
   last_name: string;
-  email: string;
+
   gender: string;
   birth: string;
   about: string;
@@ -32,6 +32,8 @@ type UserData = {
 export default async function formHandler(formData: FormData) {
   const { userId } = auth();
   if (!userId) throw new Error("User not authenticated");
+  const user = await currentUser();
+  console.log(user);
   let photos: string[] = [];
   let avatarUrl = "";
   const socials = {
@@ -80,22 +82,11 @@ export default async function formHandler(formData: FormData) {
     skills.push(formData.get("skill-4"));
     return skills.map((skill) => ({ skill }));
   }
-  const getUser: object | null = await prisma.user.findFirst({
-    where: {
-      email: formData.get("email") as string,
-    },
-    select: {
-      email: true,
-    },
-  });
-  if (getUser) {
-    throw new Error("User already exists");
-  }
   const rawFormData: UserData = {
     avatar: formData.get("avatar") as unknown as File,
     first_name: formData.get("first_name") as string,
     last_name: formData.get("last_name") as string,
-    email: formData.get("email") as string,
+
     gender: formData.get("gender") as string,
     birth: birth as string,
     about: formData.get("about") as string,
@@ -136,11 +127,11 @@ export default async function formHandler(formData: FormData) {
       });
   }
   try {
-    const user = await prisma.user.create({
+     await prisma.user.create({
       data: {
+        id: userId,
         first_name: rawFormData.first_name,
         last_name: rawFormData.last_name,
-        email: rawFormData.email,
         gender: rawFormData.gender,
         avatar_url: avatarUrl,
         birth: rawFormData.birth,

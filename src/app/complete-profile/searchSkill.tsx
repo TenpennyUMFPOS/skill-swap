@@ -28,7 +28,7 @@ export const SearchSkill = ({
   const searchSkillFromApi = () => {
     setIsLoading(true);
     let myHeaders = new Headers();
-    myHeaders.append("apikey", "nmbAL1LiUpwcHIsciAnKU4rQcjF8yNsY");
+    myHeaders.append("apikey", process.env.SKILLS_API_KEY as string);
     const normalizedSearch = replaceSpacesWithPercent20(searchSkill);
     let requestOptions = {
       method: "GET",

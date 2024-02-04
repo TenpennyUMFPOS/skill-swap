@@ -11,7 +11,6 @@ model User {
   id                String   @id @default(cuid())
   first_name        String
   last_name         String
-  email             String   @unique
   gender            String
   avatar_url        String
   birth             String

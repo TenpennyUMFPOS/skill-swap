@@ -10,6 +10,7 @@ import { auth } from "@clerk/nextjs";
 import { SidebarTabs } from "../client-components/tabs/sidebar-tabs";
 import { storage } from "../../../initializeFirebase.local";
 import { getDownloadURL, ref } from "firebase/storage";
+import GetAvatarURL from "../actions/getAvatarURL";
 
 export async function Sidebar() {
   const { userId } = auth();
@@ -17,19 +18,15 @@ export async function Sidebar() {
   const user: User = (await prisma.user.findUnique({
     where: { id: userId },
   })) as unknown as User;
-  const avatarStorageRef = ref(storage, user.avatar_url);
-  let avatar = "";
-  getDownloadURL(avatarStorageRef).then((url) => {
-    avatar = url;
-    console.log(avatar);
-  });
+  const url = await GetAvatarURL(userId);
+
   return (
     <div className="w-1/4 h-screen bg-blue-200">
       <div className="h-24 w-full p-4 bg-amber-600 flex justify-between items-center">
         {/* avatar */}
         <div className=" flex gap-2 items-center">
           <Avatar>
-            <AvatarImage src={avatar} />
+            <AvatarImage src={url} />
           </Avatar>
           <div className="text-xl font-semibold text-slate-100">
             {user.first_name + " " + user.last_name}
