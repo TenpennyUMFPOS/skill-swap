@@ -9,6 +9,7 @@ export default async function checkProfileCompleted() {
     where: { id: userId },
     select: { profile_completed: true },
   });
+  console.log(user);
   if (user?.profile_completed) return true;
   else return false;
 }

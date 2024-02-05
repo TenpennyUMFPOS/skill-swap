@@ -28,7 +28,10 @@ export const SearchSkill = ({
   const searchSkillFromApi = () => {
     setIsLoading(true);
     let myHeaders = new Headers();
-    myHeaders.append("apikey", process.env.SKILLS_API_KEY as string);
+    myHeaders.append(
+      "apikey",
+      process.env.NEXT_PUBLIC_SKILLS_API_KEY as string
+    );
     const normalizedSearch = replaceSpacesWithPercent20(searchSkill);
     let requestOptions = {
       method: "GET",
@@ -38,7 +41,7 @@ export const SearchSkill = ({
 
     fetch(
       `https://api.apilayer.com/skills?q=${normalizedSearch}`,
-      requestOptions,
+      requestOptions
     )
       .then((response) => response.json())
       .then((result) => {
@@ -95,7 +98,7 @@ export const SearchSkill = ({
               {isLoading ? (
                 <Spinner />
               ) : (
-                 searchResult?.map((res, index) => {
+                searchResult?.map((res, index) => {
                   return (
                     <Button
                       key={index}
