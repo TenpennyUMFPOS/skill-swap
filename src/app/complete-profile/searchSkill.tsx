@@ -42,6 +42,7 @@ export const SearchSkill = ({
     )
       .then((response) => response.json())
       .then((result) => {
+        console.log(result);
         setSearchResult(result);
         setIsLoading(false);
       })
@@ -94,7 +95,7 @@ export const SearchSkill = ({
               {isLoading ? (
                 <Spinner />
               ) : (
-                searchResult?.map((res, index) => {
+                 searchResult?.map((res, index) => {
                   return (
                     <Button
                       key={index}
