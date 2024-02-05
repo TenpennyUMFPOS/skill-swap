@@ -17,7 +17,6 @@ type Match = {
 export const SidebarTabs = () => {
     const [matches, setMatches] = useState<Match[]>([]);
     const { userId } = useAuth();
-    if (!userId) return
 
     useEffect(() => {
         const q = query(matchesCollectionRef,
