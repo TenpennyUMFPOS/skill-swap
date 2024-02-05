@@ -26,6 +26,9 @@ export default function UserCard({
   setSwipe: React.Dispatch<React.SetStateAction<boolean>>;
 }>) {
   const [photos, setPhotos] = useState<string[]>([]);
+  const [showedPhoto, setShowedPhoto] = useState<string>();
+  const [focused, setFocused] = useState<number>(0);
+
   const querryPhotos = async () => {
     const photosUrls = await getUserPhotos(profile.id);
     if (photosUrls && photosUrls.length > 0) {
@@ -36,12 +39,13 @@ export default function UserCard({
     }
   };
   const displayPhoto = (i?: number) => {
-    if (i === undefined) return photos[0];
-    return photos[i];
+    if (i === undefined) setShowedPhoto(photos[0]);
+    else setShowedPhoto(photos[i]);
   };
   useEffect(() => {
     querryPhotos().then((res) => {
       setPhotos(res);
+      displayPhoto();
     });
   }, []);
   const like = async () => {
@@ -87,16 +91,34 @@ export default function UserCard({
       };
     });
   };
+  const photosStatusBarLength = () => {
+    switch (photos.length) {
+      case 1:
+        return "w-full";
+      case 2:
+        return "w-1/2";
+      case 3:
+        return "w-1/3";
+    }
+  };
   return (
     <Card className="relative w-full h-full mx-auto">
       <div className="absolute z-10 flex space-x-1 w-full h-3 ">
-        <div className={`bg-slate-200 w-1/3 rounded-sm cursor-pointer`}></div>
-        <div className="bg-slate-200 w-1/3 rounded-sm"></div>
-        <div className="bg-slate-200 w-1/3 rounded-sm"></div>
+        {photos.map((photo, i) => {
+          return (
+            <div
+              key={i}
+              className={`${
+                focused == i ? "bg-white" : "bg-slate-200"
+              }  ${photosStatusBarLength()} rounded-sm cursor-pointer`}
+              onClick={() => displayPhoto(i)}
+            ></div>
+          );
+        })}
       </div>
       <CardContent
         className="relative flex-col justify-end items-end p-0  rounded-t-lg h-[556px] bg-no-repeat bg-center bg-cover"
-        style={{ backgroundImage: `url(${displayPhoto()})` }}
+        style={{ backgroundImage: `url(${showedPhoto})` }}
       >
         <div className="absolute bottom-0 left-0 h-32 w-full bg-gradient-to-b from-transparent to-black"></div>
         <div className="absolute bottom-0 left-0 text-white p-4">
