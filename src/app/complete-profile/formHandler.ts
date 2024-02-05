@@ -1,5 +1,5 @@
 "use server";
-import { storage } from "../../../initializeFirebase.local";
+import { storage } from "../../../firebase";
 import { ref, uploadBytes } from "firebase/storage";
 import { auth, currentUser } from "@clerk/nextjs";
 import { File } from "buffer";
@@ -33,7 +33,7 @@ export default async function formHandler(formData: FormData) {
   const { userId } = auth();
   if (!userId) throw new Error("User not authenticated");
   const user = await currentUser();
-  console.log(user);
+
   let photos: string[] = [];
   let avatarUrl = "";
   const socials = {

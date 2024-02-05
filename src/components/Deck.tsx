@@ -37,7 +37,6 @@ function Deck({ innitialFeeds }: { innitialFeeds: User[] }) {
   useEffect(() => {
     let timeout: NodeJS.Timeout;
     if (swipe == true) {
-      console.log(gone.size);
       if (gone.size == feeds.length) {
         setLoading(true);
         console.log("all cards are gone");
@@ -53,7 +52,7 @@ function Deck({ innitialFeeds }: { innitialFeeds: User[] }) {
               setLoading(false);
             }, 1000);
           })
-          .catch((err) => console.log(err));
+          .catch((err) => console.error(err));
       }
       setSwipe(false);
       return () => clearInterval(timeout);

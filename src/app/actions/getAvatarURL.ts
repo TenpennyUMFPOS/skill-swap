@@ -1,7 +1,7 @@
 import { User } from "@prisma/client";
 import { getDownloadURL, ref } from "firebase/storage";
 import prisma from "../db";
-import { storage } from "../../../initializeFirebase.local";
+import { storage } from "../../../firebase";
 export default async function GetAvatarURL(user_id: string) {
   const user: User = (await prisma.user.findUnique({
     where: { id: user_id },

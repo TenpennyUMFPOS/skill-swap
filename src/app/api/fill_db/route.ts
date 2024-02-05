@@ -19,7 +19,7 @@ export async function GET(request: Request) {
         data: {
           first_name: data.first_name,
           last_name: data.last_name,
-          email: data.email,
+
           gender: data.gender,
           avatar_url: data.avatar,
           birth: data.birth,

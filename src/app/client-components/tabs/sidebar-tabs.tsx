@@ -6,7 +6,7 @@ import { useAuth } from "@clerk/nextjs";
 import { DocumentData, query, where, or, onSnapshot } from "firebase/firestore";
 import { Flame, Mail } from "lucide-react";
 import { useEffect, useState } from "react";
-import { matchesCollectionRef } from "../../../../initializeFirebase.local";
+import { matchesCollectionRef } from "../../../../firebase";
 
 
 type Match = {

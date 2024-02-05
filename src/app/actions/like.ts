@@ -4,7 +4,7 @@ import { type Like, type User } from "@prisma/client";
 import prisma from "../db";
 import { auth } from "@clerk/nextjs";
 import { addDoc } from "firebase/firestore";
-import { matchesCollectionRef } from "../../../initializeFirebase.local";
+import { matchesCollectionRef } from "../../../firebase";
 
 export default async function likeAction(likedUser_id: string) : Promise<boolean>{
   const { userId } = auth();

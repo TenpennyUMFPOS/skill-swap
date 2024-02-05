@@ -45,11 +45,11 @@ export const SearchSkill = ({
     )
       .then((response) => response.json())
       .then((result) => {
-        console.log(result);
+      
         setSearchResult(result);
         setIsLoading(false);
       })
-      .catch((error) => console.log("error", error));
+      .catch((error) => console.error("error", error));
   };
 
   function replaceSpacesWithPercent20(inputString: string) {

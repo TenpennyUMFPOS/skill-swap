@@ -8,7 +8,7 @@ import { User } from "@prisma/client";
 import { MatchTab } from "./match/match-Tab";
 import { auth } from "@clerk/nextjs";
 import { SidebarTabs } from "../client-components/tabs/sidebar-tabs";
-import { storage } from "../../../initializeFirebase.local";
+import { storage } from "../../../firebase";
 import { getDownloadURL, ref } from "firebase/storage";
 import GetAvatarURL from "../actions/getAvatarURL";
 
