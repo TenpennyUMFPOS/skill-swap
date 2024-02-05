@@ -1,3 +1,4 @@
+"use server";
 import { User } from "@prisma/client";
 import { getDownloadURL, ref } from "firebase/storage";
 import prisma from "../db";
