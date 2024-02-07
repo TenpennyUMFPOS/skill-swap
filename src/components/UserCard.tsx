@@ -7,10 +7,11 @@ import { User } from "@prisma/client";
 import likeAction from "@/app/actions/like";
 import rejectAction from "@/app/actions/reject";
 import { ShowMatchToast } from "@/app/server-components/match/show-match-toast";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import getUserPhotos from "@/app/actions/getUserPhotos";
 import GetAvatarURL from "@/app/actions/getAvatarURL";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { ProfileInfoDrawer } from "@/app/deck/profileInfoDrawer";
+import { UserInfosDrawerContext } from './Deck'
 
 export default function UserCard({
   api,
@@ -28,6 +29,10 @@ export default function UserCard({
   const [photos, setPhotos] = useState<string[]>([]);
   const [showedPhoto, setShowedPhoto] = useState<string>();
   const [focused, setFocused] = useState<number>(0);
+  const [openProfileInfo, setOpenProfileInfo] = useState(false);
+
+  const { setProfileInfos } = useContext(UserInfosDrawerContext);
+
 
   const querryPhotos = async () => {
     const photosUrls = await getUserPhotos(profile.id);
@@ -39,13 +44,17 @@ export default function UserCard({
     }
   };
   const displayPhoto = (i?: number) => {
-    if (i === undefined) setShowedPhoto(photos[0]);
-    else setShowedPhoto(photos[i]);
-  };
+    if (i === undefined) {
+      setShowedPhoto(photos[0]);
+    } else {
+      setShowedPhoto(photos[i]);
+      setFocused(i);
+    }
+  }
+
   useEffect(() => {
     querryPhotos().then((res) => {
       setPhotos(res);
-      displayPhoto();
     });
   }, []);
   const like = async () => {
@@ -92,6 +101,7 @@ export default function UserCard({
     });
   };
   const photosStatusBarLength = () => {
+
     switch (photos.length) {
       case 1:
         return "w-full";
@@ -101,6 +111,11 @@ export default function UserCard({
         return "w-1/3";
     }
   };
+  const handleOpenProfileInfos = () => {
+    setProfileInfos(profile);
+    document.getElementById("open-user-infos-drawer")?.click();
+  }
+
   return (
     <Card className="relative w-full h-full mx-auto">
       <div className="absolute z-10 flex space-x-1 w-full h-3 ">
@@ -108,24 +123,28 @@ export default function UserCard({
           return (
             <div
               key={i}
-              className={`${
-                focused == i ? "bg-white" : "bg-slate-200"
-              }  ${photosStatusBarLength()} rounded-sm cursor-pointer`}
+              className={`${focused == i ? "bg-white" : "bg-slate-200"
+                }  ${photosStatusBarLength()} rounded-sm cursor-pointer`}
               onClick={() => displayPhoto(i)}
             ></div>
           );
         })}
       </div>
       <CardContent
-        className="relative flex-col justify-end items-end p-0  rounded-t-lg h-[556px] bg-no-repeat bg-center bg-cover"
-        style={{ backgroundImage: `url(${showedPhoto})` }}
+        className="transition-all duration-300  relative flex-col justify-end items-end p-0  rounded-t-lg h-[556px] bg-no-repeat bg-center bg-cover"
+        style={{ backgroundImage: `url(${showedPhoto ? showedPhoto : photos[0]})` }}
       >
         <div className="absolute bottom-0 left-0 h-32 w-full bg-gradient-to-b from-transparent to-black"></div>
-        <div className="absolute bottom-0 left-0 text-white p-4">
-          <h2 className="text-2xl font-bold">
-            {profile.first_name}, {calculateAge(profile.birth)}
-          </h2>
-          <p className="text-sm ">{profile.about}</p>
+        <div className="absolute bottom-0 left-0 flex justify-between text-white p-4 w-full">
+
+          <div>
+            <h2 className="text-2xl font-bold">
+              {profile.first_name}, {calculateAge(profile.birth)}
+            </h2>
+            <p className="text-sm ">{profile.about}</p>
+          </div>
+          <div className="cursor-pointer" onClick={handleOpenProfileInfos}><InfoCircledIcon className="w-8 h-8" /></div>
+
         </div>
       </CardContent>
       <CardFooter className="w-full h-20 bg-black flex justify-between items-center">
@@ -141,20 +160,20 @@ export default function UserCard({
 }
 
 function CrossIcon(props: any) {
-    return (
-        <svg
-            {...props}
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-        >
-            <path d="M11 2a2 2 0 0 0-2 2v5H4a2 2 0 0 0-2 2v2c0 1.1.9 2 2 2h5v5c0 1.1.9 2 2 2h2a2 2 0 0 0 2-2v-5h5a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-5V4a2 2 0 0 0-2-2h-2z" />
-        </svg>
-    )
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M11 2a2 2 0 0 0-2 2v5H4a2 2 0 0 0-2 2v2c0 1.1.9 2 2 2h5v5c0 1.1.9 2 2 2h2a2 2 0 0 0 2-2v-5h5a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-5V4a2 2 0 0 0-2-2h-2z" />
+    </svg>
+  )
 }

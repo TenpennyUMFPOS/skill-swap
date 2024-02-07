@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { useSprings, animated, to as interpolate } from "@react-spring/web";
 import { useDrag } from "react-use-gesture";
 import { init } from "@/lib/features/deck-slice";
@@ -12,6 +12,10 @@ import rejectAction from "@/app/actions/reject";
 import feedsHydration from "@/app/actions/feedsHydration";
 import { Spinner } from "./ui/spinner";
 import { ShowMatchToast } from "@/app/server-components/match/show-match-toast";
+import { ProfileInfoDrawer } from "@/app/deck/profileInfoDrawer";
+
+// User profile infos context
+export const  UserInfosDrawerContext = createContext<{ profileInfos: User | null, setProfileInfos: React.Dispatch<React.SetStateAction<User | null>> }>({ profileInfos: null, setProfileInfos: () => { } });
 
 // These two are just helpers, they curate spring data, values that are later being interpolated into css
 const to = (i: number) => ({
@@ -26,6 +30,8 @@ const trans = (r: number, s: number) =>
   ` rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`;
 
 function Deck({ innitialFeeds }: { innitialFeeds: User[] }) {
+
+  const [profileInfos, setProfileInfos] = useState<User | null>(null)
   const [feeds, setFeeds] = useState<User[]>(innitialFeeds);
   const [gone] = useState(() => new Set<number>()); // The set flags all the cards that are flicked out
   const [loading, setLoading] = useState(false);
@@ -121,25 +127,28 @@ function Deck({ innitialFeeds }: { innitialFeeds: User[] }) {
   if (loading) return <Spinner />;
   return (
     <>
-      {props.map(({ x, y, rot, scale }, i) => (
-        <animated.div className={styles.deck} key={i} style={{ x, y }}>
-          {/* This is the card itself, we're binding our gesture to it (and inject its index so we know which is which) */}
-          <animated.div
-            {...bind(i)}
-            style={{
-              transform: interpolate([rot, scale], trans),
-            }}
-          >
-            <UserCard
-              api={api}
-              gone={gone}
-              index={i}
-              profile={feeds[i]}
-              setSwipe={setSwipe}
-            />
+      <UserInfosDrawerContext.Provider value={{ profileInfos, setProfileInfos }}>
+        <ProfileInfoDrawer />
+        {props.map(({ x, y, rot, scale }, i) => (
+          <animated.div className={styles.deck} key={i} style={{ x, y }}>
+            {/* This is the card itself, we're binding our gesture to it (and inject its index so we know which is which) */}
+            <animated.div
+              {...bind(i)}
+              style={{
+                transform: interpolate([rot, scale], trans),
+              }}
+            >
+              <UserCard
+                api={api}
+                gone={gone}
+                index={i}
+                profile={feeds[i]}
+                setSwipe={setSwipe}
+              />
+            </animated.div>
           </animated.div>
-        </animated.div>
-      ))}
+        ))}
+      </UserInfosDrawerContext.Provider>
     </>
   );
 }
