@@ -1,7 +1,7 @@
 "use client"
 import { CardContent, CardFooter, Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { HeartIcon, InfoCircledIcon } from "@radix-ui/react-icons";
+import { Cross1Icon, HeartIcon, InfoCircledIcon } from "@radix-ui/react-icons";
 import { SpringRef } from "@react-spring/web";
 import { User } from "@prisma/client";
 import likeAction from "@/app/actions/like";
@@ -11,7 +11,7 @@ import { useContext, useEffect, useState } from "react";
 import getUserPhotos from "@/app/actions/getUserPhotos";
 import GetAvatarURL from "@/app/actions/getAvatarURL";
 import { ProfileInfoDrawer } from "@/app/deck/profileInfoDrawer";
-import { UserInfosDrawerContext } from './Deck'
+import { UserInfosDrawerContext } from "./Deck";
 
 export default function UserCard({
   api,
@@ -33,7 +33,6 @@ export default function UserCard({
 
   const { setProfileInfos } = useContext(UserInfosDrawerContext);
 
-
   const querryPhotos = async () => {
     const photosUrls = await getUserPhotos(profile.id);
     if (photosUrls && photosUrls.length > 0) {
@@ -50,7 +49,7 @@ export default function UserCard({
       setShowedPhoto(photos[i]);
       setFocused(i);
     }
-  }
+  };
 
   useEffect(() => {
     querryPhotos().then((res) => {
@@ -101,7 +100,6 @@ export default function UserCard({
     });
   };
   const photosStatusBarLength = () => {
-
     switch (photos.length) {
       case 1:
         return "w-full";
@@ -114,7 +112,7 @@ export default function UserCard({
   const handleOpenProfileInfos = () => {
     setProfileInfos(profile);
     document.getElementById("open-user-infos-drawer")?.click();
-  }
+  };
 
   return (
     <Card className="relative w-full h-full mx-auto">
@@ -123,8 +121,9 @@ export default function UserCard({
           return (
             <div
               key={i}
-              className={`${focused == i ? "bg-white" : "bg-slate-200"
-                }  ${photosStatusBarLength()} rounded-sm cursor-pointer`}
+              className={`${
+                focused == i ? "bg-white" : "bg-slate-200"
+              }  ${photosStatusBarLength()} rounded-sm cursor-pointer`}
               onClick={() => displayPhoto(i)}
             ></div>
           );
@@ -132,26 +131,28 @@ export default function UserCard({
       </div>
       <CardContent
         className="transition-all duration-300  relative flex-col justify-end items-end p-0  rounded-t-lg h-[556px] bg-no-repeat bg-center bg-cover"
-        style={{ backgroundImage: `url(${showedPhoto ? showedPhoto : photos[0]})` }}
+        style={{
+          backgroundImage: `url(${showedPhoto ? showedPhoto : photos[0]})`,
+        }}
       >
         <div className="absolute bottom-0 left-0 h-32 w-full bg-gradient-to-b from-transparent to-black"></div>
         <div className="absolute bottom-0 left-0 flex justify-between text-white p-4 w-full">
-
           <div>
             <h2 className="text-2xl font-bold">
               {profile.first_name}, {calculateAge(profile.birth)}
             </h2>
             <p className="text-sm ">{profile.about}</p>
           </div>
-          <div className="cursor-pointer" onClick={handleOpenProfileInfos}><InfoCircledIcon className="w-8 h-8" /></div>
-
+          <div className="cursor-pointer" onClick={handleOpenProfileInfos}>
+            <InfoCircledIcon className="w-8 h-8" />
+          </div>
         </div>
       </CardContent>
       <CardFooter className="w-full h-20 bg-black flex justify-between items-center">
-        <Button size="lg" variant="outline" onClick={reject}>
-          <CrossIcon className="w-6 h-6" />
+        <Button size="lg" variant="default" onClick={reject}>
+          <Cross1Icon className="w-6 h-6" />
         </Button>
-        <Button size="lg" onClick={like}>
+        <Button size="lg" onClick={like} variant="secondary">
           <HeartIcon className="w-6 h-6" />
         </Button>
       </CardFooter>
