@@ -45,6 +45,19 @@ export default function CompleteProfile() {
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true); // Show loading screen when form is submitted
+    try {
+      const formData = new FormData(e.target as HTMLFormElement)
+      await formHandler(formData);
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
   useEffect(() => {
     checkFormValid();
   });
@@ -85,155 +98,180 @@ export default function CompleteProfile() {
 
   return (
     <>
-      {loading ? (
-        <div>Loading ...</div>
-      ) : (
-        <div className="min-h-screen bg-gray-100 py-8 flex flex-col justify-center sm:py-12">
-          <div className="relative py-3 sm:max-w-3xl sm:mx-auto ">
-            <div className="absolute inset-0 bg-gradient-to-r from-[#ff5858] to-[#f857a6] shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl" />
-            <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
-              <div className="max-w-xl mx-auto">
-                <form action={formHandler}>
-                  <div className="divide-y divide-gray-200">
-                    <AvatarUpload />
-                    <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
-                      <div className="sm:flex justify-start gap-3 ">
-                        <div className="w-full">
-                          <Label htmlFor="firstName">First Name</Label>
-                          <Input
-                            id="firstName"
-                            placeholder="first name"
-                            type="text"
-                            name="first_name"
-                            onChange={(e) => setFirstName(e.target.value)}
-                          />
-                        </div>
-                        <div className="w-full mt-4 sm:mt-0">
-                          <Label htmlFor="lastName">Last Name</Label>
-                          <Input
-                            id="lastName"
-                            placeholder="last name"
-                            type="text"
-                            name="last_name"
-                            onChange={(e) => setLastName(e.target.value)}
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <Label htmlFor="about">About</Label>
-                        <Textarea
-                          id="about"
-                          onChange={(e) => setAbout(e.target.value)}
-                          name="about"
-                        />
-                      </div>
-                      <div className="flex gap-3">
+      <div className="min-h-screen bg-gray-100 py-8 flex flex-col justify-center sm:py-12">
+        <div className="relative py-3 sm:max-w-3xl sm:mx-auto ">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#ff5858] to-[#f857a6] shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl" />
+          <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+            <div className="max-w-xl mx-auto">
+              <form onSubmit={handleSubmit}>
+                <div className="divide-y divide-gray-200">
+                  <AvatarUpload />
+                  <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+                    <div className="sm:flex justify-start gap-3 ">
+                      <div className="w-full">
+                        <Label htmlFor="firstName">First Name</Label>
                         <Input
-                          className="w-1/3"
-                          placeholder="JJ"
-                          type="number"
-                          name="birth_date"
-                          onChange={(e) => setBirthDate(e.target.value)}
-                        />
-                        <Input
-                          className="w-1/3"
-                          placeholder="MM"
-                          type="number"
-                          name="birth_month"
-                          onChange={(e) => setBirthMonth(e.target.value)}
-                        />
-                        <Input
-                          className="w-1/3"
-                          placeholder="AAAA"
-                          type="number"
-                          name="birth_year"
-                          onChange={(e) => setBirthYear(e.target.value)}
-                        />
-                      </div>
-                      <div className="flex gap-2">
-                        <Button
-                          type="button"
-                          variant={gender == "male" ? "destructive" : "outline"}
-                          onClick={() => setGender("male")}
-                        >
-                          Male
-                        </Button>
-                        <Button
-                          type="button"
-                          variant={
-                            gender == "female" ? "destructive" : "outline"
-                          }
-                          onClick={() => setGender("female")}
-                        >
-                          Female
-                        </Button>
-                        <Input
-                          readOnly
-                          className="hidden"
+                          id="firstName"
+                          placeholder="first name"
                           type="text"
-                          name="gender"
-                          value={gender}
+                          name="first_name"
+                          onChange={(e) => setFirstName(e.target.value)}
                         />
                       </div>
-
-                      <SearchSkill skills={skills} setSkills={setSkills} />
-                      <div className="py-2 flex justify-start items-center space-x-2">
-                        {skills.map((skill, index) => {
-                          return (
-                            <div key={index}>
-                              <Button type="button" variant="destructive">
-                                {skill}
-                              </Button>
-                              <Input
-                                readOnly
-                                className="hidden"
-                                key={index}
-                                type="text"
-                                name={`skill-${index}`}
-                                value={skills[index]}
-                              />
-                            </div>
-                          );
-                        })}
+                      <div className="w-full mt-4 sm:mt-0">
+                        <Label htmlFor="lastName">Last Name</Label>
+                        <Input
+                          id="lastName"
+                          placeholder="last name"
+                          type="text"
+                          name="last_name"
+                          onChange={(e) => setLastName(e.target.value)}
+                        />
                       </div>
-                      <div className="grid grid-cols-3 gap-4">
-                        <ImageUpload name="img-0" />
-                        <ImageUpload name="img-1" />
-                        <ImageUpload name="img-2" />
-                      </div>
-                      <p className="text-xs text-gray-500">
-                        Make your profile unique
-                      </p>
                     </div>
 
-                    <Socials />
-                    <div className="pt-6 text-base leading-6 font-bold sm:text-lg sm:leading-7">
+                    <div>
+                      <Label htmlFor="about">About</Label>
+                      <Textarea
+                        id="about"
+                        onChange={(e) => setAbout(e.target.value)}
+                        name="about"
+                      />
+                    </div>
+                    <div className="flex gap-3">
+                      <Input
+                        className="w-1/3"
+                        placeholder="JJ"
+                        type="number"
+                        name="birth_date"
+                        onChange={(e) => setBirthDate(e.target.value)}
+                      />
+                      <Input
+                        className="w-1/3"
+                        placeholder="MM"
+                        type="number"
+                        name="birth_month"
+                        onChange={(e) => setBirthMonth(e.target.value)}
+                      />
+                      <Input
+                        className="w-1/3"
+                        placeholder="AAAA"
+                        type="number"
+                        name="birth_year"
+                        onChange={(e) => setBirthYear(e.target.value)}
+                      />
+                    </div>
+                    <div className="flex gap-2">
                       <Button
-                        className="w-full"
-                        type="submit"
-                        disabled={isSubmitDisabled}
+                        type="button"
+                        variant={gender == "male" ? "destructive" : "outline"}
+                        onClick={() => setGender("male")}
                       >
-                        Continuer
+                        Male
                       </Button>
-                      <p className="mt-4">
-                        Vous voulez vous connecter à un compte existant?
-                        <Button
-                          className="text-[#ff5858] p-0 m-0 font-bold text-lg"
-                          variant="link"
-                          onClick={() => signOut(() => router.push("/"))}
-                        >
-                          Connectez-vous.
-                        </Button>
-                      </p>
+                      <Button
+                        type="button"
+                        variant={
+                          gender == "female" ? "destructive" : "outline"
+                        }
+                        onClick={() => setGender("female")}
+                      >
+                        Female
+                      </Button>
+                      <Input
+                        readOnly
+                        className="hidden"
+                        type="text"
+                        name="gender"
+                        value={gender}
+                      />
                     </div>
+
+                    <SearchSkill skills={skills} setSkills={setSkills} />
+                    <div className="py-2 flex justify-start items-center space-x-2">
+                      {skills.map((skill, index) => {
+                        return (
+                          <div key={index}>
+                            <Button type="button" variant="destructive">
+                              {skill}
+                            </Button>
+                            <Input
+                              readOnly
+                              className="hidden"
+                              key={index}
+                              type="text"
+                              name={`skill-${index}`}
+                              value={skills[index]}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <div className="grid grid-cols-3 gap-4">
+                      <ImageUpload name="img-0" />
+                      <ImageUpload name="img-1" />
+                      <ImageUpload name="img-2" />
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      Make your profile unique
+                    </p>
                   </div>
-                </form>
-              </div>
+
+                  <Socials />
+
+
+                  <div className="pt-6 text-base leading-6 font-bold sm:text-lg sm:leading-7">
+                    <Button
+                      className="w-full"
+                      type="submit"
+                      disabled={isSubmitDisabled || loading}
+                    >
+                      {loading ? (
+                        <div className="flex items-center justify-center">
+                          <svg
+                            className="animate-spin h-5 w-5 mr-3"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 4.418 3.582 8 8 8v-4zm16-1.172c0-4.418-3.582-8-8-8v4c3.86 0 7 3.14 7 7h1.172z"
+                            ></path>
+                          </svg>
+                          Loading...
+                        </div>
+                      ) : (
+                        "Continuer"
+                      )}
+                    </Button>
+                    <p className="mt-4">
+                      Vous voulez vous connecter à un compte existant?
+                      <Button
+                        className="text-[#ff5858] p-0 m-0 font-bold text-lg"
+                        variant="link"
+                        onClick={() => signOut(() => router.push("/"))}
+                      >
+                        Connectez-vous.
+                      </Button>
+                    </p>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
         </div>
-      )}
+      </div>
+
     </>
   );
 }

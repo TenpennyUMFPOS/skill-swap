@@ -45,7 +45,7 @@ export const SearchSkill = ({
     )
       .then((response) => response.json())
       .then((result) => {
-      
+
         setSearchResult(result);
         setIsLoading(false);
       })
@@ -68,7 +68,7 @@ export const SearchSkill = ({
     }
   };
   return (
-    <Dialog onOpenChange={(open) => handleOpenChange(open)}>
+    <Dialog onOpenChange={(open: boolean) => handleOpenChange(open)}>
       <DialogTrigger asChild>
         <Button type="button" variant="outline">
           + Add skills

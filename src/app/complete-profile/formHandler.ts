@@ -34,6 +34,7 @@ export default async function formHandler(formData: FormData) {
   if (!userId) throw new Error("User not authenticated");
   const user = await currentUser();
 
+
   let photos: string[] = [];
   let avatarUrl = "";
   const socials = {
@@ -127,7 +128,7 @@ export default async function formHandler(formData: FormData) {
       });
   }
   try {
-     await prisma.user.create({
+    await prisma.user.create({
       data: {
         id: userId,
         first_name: rawFormData.first_name,
